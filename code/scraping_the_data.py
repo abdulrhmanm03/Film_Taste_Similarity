@@ -1,13 +1,7 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import StaleElementReferenceException
+from bs4 import BeautifulSoup
+import requests
 
-
-def scrap(username, q):
-    ratings_map = {
+ratings_map = {
         '½': 1,
         '★': 2,
         '★½': 3,
@@ -18,50 +12,33 @@ def scrap(username, q):
         '★★★★': 8,
         '★★★★½': 9,
         '★★★★★': 10
-    }
-    user = {}
+}
 
-    url = f"https://letterboxd.com/{username}/films"
-    driver = webdriver.Chrome()
-    driver.set_page_load_timeout(20)
+user = {}
+def main(soup):
+        poster_container = soup.find_all(class_ = 'poster-container')
 
-    def main(url):
-        driver.get(url)
-        wait = WebDriverWait(driver, 20)
-        span_elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'li.poster-container')))
-        ignored_exceptions=(NoSuchElementException,StaleElementReferenceException)
-        for span_element in span_elements:
-            child = span_element.find_element(By.CSS_SELECTOR, 'p.poster-viewingdata')
-            if child.text:
-                def func():
-                    try:
-                        return span_element.find_element(By.CSS_SELECTOR, 'div.poster').get_attribute('data-film-id')
-                    except StaleElementReferenceException:
-                        WebDriverWait(driver, 20,ignored_exceptions=ignored_exceptions).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'div.poster')))
-                        func()
-                name = func()
-                rating = span_element.find_element(By.CSS_SELECTOR, 'span.rating').text
-            
-                user[name] = ratings_map[rating]
-            
-            
-    try:
-        print(username + ' start')
-        main(url=url)
+        for film in poster_container:
+            if film.find(class_="rating"):
+                poster = film.find(class_='poster')
+                film_id = poster.get('data-film-id')
+                rating = film.find(class_="rating").text
+                user[film_id] = ratings_map[rating]
 
-        n = int(driver.find_elements(By.CSS_SELECTOR, 'li.paginate-page')[-1].find_element(By.CSS_SELECTOR, 'a').text)
-        for i in range(2, n+1):
-            print(username, i)
-            url = f"https://letterboxd.com/{username}/films/page/{i}"
-            main(url=url)       
-
-               
-    finally:
-        driver.quit()
-        print(username + ' done')
-        if not user:
-            q.put({0:0})
-        q.put(user)
+def scrap(username, q):
+    
+    url = f'https://letterboxd.com/{username}/films/'
+    r = requests.get(url)
+    soup = BeautifulSoup(r.content, 'html.parser')
+    main(soup=soup)
+    n = int(soup.find_all(class_ = "paginate-page")[-1].text)
+    for i in range(2, n+1):
+        url = f'https://letterboxd.com/{username}/films/page/{i}'
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, 'html.parser')
+        main(soup=soup)
+        
+    q.put(user)
 
    
 

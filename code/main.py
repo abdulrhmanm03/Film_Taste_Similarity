@@ -35,7 +35,7 @@ def main():
     if len(vector1) == 0:
         print('0 common rated film')
     else:        
-        print(len(vector1) + ' common rated film') 
+        print(f'{len(vector1)} common rated film') 
                    
         vector1, vector2 = np.array(vector1), np.array(vector2)      
 
