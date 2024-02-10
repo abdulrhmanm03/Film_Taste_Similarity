@@ -17,6 +17,7 @@ def main():
 
     process1.join()
     process2.join()
+    print("caluclating.....")
     
     user1_data = result_queue.get()
     user2_data = result_queue.get()

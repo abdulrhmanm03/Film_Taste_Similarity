@@ -41,6 +41,10 @@ def scrap(username, q):
         soup = BeautifulSoup(r.content, 'html.parser')
         main(soup=soup)
         
-    print(f"{username} done")    
-        
-    q.put(user)
+    print(f"{username} done") 
+       
+    if not user:
+        print("field to get data")
+        q.put({1:1})  
+    else:      
+        q.put(user)
