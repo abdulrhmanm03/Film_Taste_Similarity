@@ -7,6 +7,7 @@ from numpy.linalg import norm
 def main():
     username1 = input("enter letterboxed username:  ")
     username2 = input("enter letterboxed username:  ")
+    print('')
     
     result_queue = multiprocessing.Queue()
 
@@ -27,22 +28,27 @@ def main():
 
     vector1 = []
     vector2 = []
+    E = 0
     for n in films1:
         if n in films2:
             vector1.append(films1[n])
             vector2.append(films2[n])
+            E += (films1[n]-films2[n])**2
             
     if len(vector1) == 0:
         print('0 common rated film')
     else:        
-        print(f'{len(vector1)} common rated film') 
+        print(f'{len(vector1)} common rated film')
+        print('') 
                    
         vector1, vector2 = np.array(vector1), np.array(vector2)      
 
         dot_product = np.dot(vector1, vector2)
 
         norm_vector1, norm_vector2 = norm(vector1), norm(vector2)
-
+        
+        
+        MSE = (1 - (E/(len(vector1)*10)))
         cosine_similarity = dot_product / (norm_vector1 * norm_vector2)
         normalized_cosine_similarity = 0.5 * (cosine_similarity + 1)
         transformed_similarity = 1-(np.arccos(cosine_similarity))
@@ -50,9 +56,15 @@ def main():
         normalized_pearson_corr = 0.5 * (pearson_corr + 1)
 
 
-        print("Transformed Similarity:", transformed_similarity*100)
-        print("Normalized Cosine Similarity:", normalized_cosine_similarity*100)
-        print("Normalized Pearson Correlation Coefficient:", normalized_pearson_corr*100)
+        print("Transformed Similarity: ", round(transformed_similarity, 3)*100)
+        print("---------------------------------------------------------------------------------")
+        print("Normalized Cosine Similarity: ", round(normalized_cosine_similarity, 3)*100)
+        print("---------------------------------------------------------------------------------")
+        print("Normalized Pearson Correlation Coefficient: ", round(normalized_pearson_corr, 3)*100)
+        print("---------------------------------------------------------------------------------")
+        print("Mean squered error: ", round(MSE, 3)*100)
+        print("---------------------------------------------------------------------------------")
+        print('')
 
 if __name__ == "__main__":
     main()
