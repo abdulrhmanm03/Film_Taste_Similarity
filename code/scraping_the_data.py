@@ -30,15 +30,17 @@ def scrap(username, q):
     url = f'https://letterboxd.com/{username}/films/'
     r = requests.get(url)
     soup = BeautifulSoup(r.content, 'html.parser')
+    print(f"getting {username} data....")
     main(soup=soup)
+    
     n = int(soup.find_all(class_ = "paginate-page")[-1].text)
     for i in range(2, n+1):
+        
         url = f'https://letterboxd.com/{username}/films/page/{i}'
         r = requests.get(url)
         soup = BeautifulSoup(r.content, 'html.parser')
         main(soup=soup)
         
+    print(f"{username} done")    
+        
     q.put(user)
-
-   
-
