@@ -1,5 +1,5 @@
 from scraping_the_data import scrap
-from math_1 import similarity
+from math_and_results import similarity
 import multiprocessing
 
 def main():
@@ -17,11 +17,11 @@ def main():
 
     process1.join()
     process2.join()
-    print("caluclating.....")
     
     user1_data = result_queue.get()
     user2_data = result_queue.get()
     
+    print("caluclating.....")
     
     similarity(user1_data, user2_data, username1, username2)
 

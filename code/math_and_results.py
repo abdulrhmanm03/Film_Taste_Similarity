@@ -20,15 +20,18 @@ def similarity(user1, user2, username1, username2):
         print(f'{len(vector1)} common rated film')
         print('') 
                     
-        vector1, vector2 = np.array(vector1), np.array(vector2)      
-
-        dot_product = np.dot(vector1, vector2)
-
-        norm_vector1, norm_vector2 = norm(vector1), norm(vector2)
+        vector1, vector2 = np.array(vector1), np.array(vector2) 
+             
+        # Users consistently assigned higher ratings to good films and lower ratings to bad ones, resulting in high scores for everyone in the cosine similarity 
+        # Used the square of both vectors to penalize the difference more
+        # It creates a new vector and angle, yes, but I don't think that really matters in our case
+        dot_product = np.dot((vector1**2), (vector2**2))
+        norm_vector1, norm_vector2 = norm((vector1**2)), norm((vector2**2))
+        cosine_similarity = dot_product / (norm_vector1 * norm_vector2)
         
         
         MSE = (1 - (E/((len(vector1)*10))))
-        cosine_similarity = dot_product / (norm_vector1 * norm_vector2)
+        
         pearson_corr = np.corrcoef(vector1, vector2)[0, 1]
         normalized_pearson_corr = 0.5 * (pearson_corr + 1)
         
@@ -38,6 +41,6 @@ def similarity(user1, user2, username1, username2):
         print("---------------------------------------------------------------------------------")
         print("Normalized Pearson Correlation Coefficient: ", round(normalized_pearson_corr, 3)*100, " from 0 to 100")
         print("---------------------------------------------------------------------------------")
-        print("Mean squered error: ", round(MSE, 3)*100, " from 0 to 100")
+        print("based on Mean squered error: ", round(MSE, 3)*100, " from 0 to 100")
         print("---------------------------------------------------------------------------------")
         print("")

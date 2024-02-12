@@ -14,7 +14,8 @@ ratings_map = {
         '★★★★★': 10
 }
 
-user = {}
+user_data = {}
+
 def main(soup):
         poster_container = soup.find_all(class_ = 'poster-container')
 
@@ -23,7 +24,7 @@ def main(soup):
                 poster = film.find(class_='poster')
                 film_id = poster.get('data-film-id')
                 rating = film.find(class_="rating").text
-                user[film_id] = ratings_map[rating]
+                user_data[film_id] = ratings_map[rating]
 
 def scrap(username, q):
     
@@ -31,7 +32,7 @@ def scrap(username, q):
     r = requests.get(url)
     soup = BeautifulSoup(r.content, 'html.parser')
     print(f"getting {username} data....")
-    main(soup=soup)
+    main(soup)
     
     n = int(soup.find_all(class_ = "paginate-page")[-1].text)
     for i in range(2, n+1):
@@ -39,12 +40,8 @@ def scrap(username, q):
         url = f'https://letterboxd.com/{username}/films/page/{i}'
         r = requests.get(url)
         soup = BeautifulSoup(r.content, 'html.parser')
-        main(soup=soup)
-        
-    print(f"{username} done") 
+        main(soup)
        
-    if not user:
-        print("field to get data")
-        q.put({1:1})  
-    else:      
-        q.put(user)
+    
+    q.put(user_data)
+    print(f"{username} done") 
