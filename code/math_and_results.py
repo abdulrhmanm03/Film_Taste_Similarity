@@ -30,7 +30,7 @@ def similarity(user1, user2, username1, username2):
         cosine_similarity = dot_product / (norm_vector1 * norm_vector2)
         
         
-        MSE = (1 - (E/((len(vector1)*10))))
+        MAE = (1 - (E/((len(vector1)*10))))
         
         pearson_corr = np.corrcoef(vector1, vector2)[0, 1]
         
@@ -40,6 +40,6 @@ def similarity(user1, user2, username1, username2):
         print("---------------------------------------------------------------------------------")
         print("Pearson Correlation Coefficient: ", round(pearson_corr, 3), " from -1 to 1")
         print("---------------------------------------------------------------------------------")
-        print("based on Mean squered error: ", round(MSE, 3)*100, " from 0 to 100")
+        print("based on Mean squered error: ", round(MAE, 3)*100, " from 0 to 100")
         print("---------------------------------------------------------------------------------")
         print("")
