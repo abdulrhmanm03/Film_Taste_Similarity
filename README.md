@@ -34,5 +34,3 @@ Film Taste Similarity is a FastAPI-based web service that allows users to compar
 
    ```bash
    uvicorn main:app --reload
-       
-   
