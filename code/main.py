@@ -8,7 +8,7 @@ app = FastAPI()
 
 @app.get('/')
 def root():
-    return {'hell' : 'word'}
+    return {'hello' : 'word'}
 
 
 @app.get('/getSimilarity')
