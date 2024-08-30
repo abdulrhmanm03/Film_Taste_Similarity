@@ -11,7 +11,7 @@ Film Taste Similarity is a FastAPI-based web service that allows users to compar
   - Pearson Correlation
 - FastAPI for creating a robust and efficient web service
 
-## To run loacaly
+## To run localy
 
 1. Clone the repository:
 
